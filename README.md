@@ -1,3 +1,4 @@
+`useAutoUpdate()`
 `useForceUpdate()`
 `useForceUpdateUID()`
 `useHover()`
