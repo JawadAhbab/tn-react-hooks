@@ -1,0 +1,41 @@
+{
+  "private": false,
+  "name": "tn-react-hooks",
+  "version": "1.6.0",
+  "description": "",
+  "keywords": [],
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "Serve": "parcel .dev/parcel/index.html --out-dir .dev/parcel/dist --cache-dir .dev/parcel/cache --open",
+    "Build": "rimraf dist && rollup -c",
+    "Publish": "rimraf .dev/parcel/dist & rimraf .dev/parcel/cache && npm run Build && yarn publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JawadAhbab/tn-react-hooks.git"
+  },
+  "author": "Turnova",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.22.3",
+    "tn-typescript": "^1.2.3",
+    "tn-uniqid": "^1.0.1"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.22.1",
+    "@babel/plugin-transform-runtime": "^7.22.4",
+    "@babel/preset-env": "^7.22.4",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@types/node": "^20.2.5",
+    "@types/react": "^18.2.9",
+    "rollup": "^3.24.0",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "typescript": "^5.1.3"
+  }
+}
