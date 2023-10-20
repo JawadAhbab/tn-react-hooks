@@ -1,42 +1,52 @@
-import _slicedToArray from "@babel/runtime/helpers/esm/slicedToArray";
-import { useRef, useEffect, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { uniqueGetter } from 'tn-uniqid';
-var useClickOutside = function useClickOutside(callback, callbackAlways) {
-  var ref = useRef(null);
-  var listener = function listener(e) {
+const useForceUpdate = () => {
+  const [, update] = useState({});
+  const forceUpdate = _ => update({});
+  return forceUpdate;
+};
+const useAutoUpdate = ms => {
+  const update = useForceUpdate();
+  useEffect(() => {
+    const interval = setInterval(() => update(), ms);
+    return () => clearInterval(interval);
+  }, []);
+};
+const useClickOutside = (callback, callbackAlways) => {
+  const ref = useRef(null);
+  const listener = e => {
     callbackAlways && callbackAlways(e);
     if (!ref.current) return;
     if (ref.current.contains(e.target)) return;
     callback && callback(e);
   };
-  useEffect(function () {
+  useEffect(() => {
     document.addEventListener('mousedown', listener);
     document.addEventListener('contextmenu', listener);
-    return function () {
+    return () => {
       document.removeEventListener('mousedown', listener);
       document.removeEventListener('contextmenu', listener);
     };
   }, []);
   return ref;
 };
-var useHover = function useHover() {
-  var _useState = useState(false),
-    _useState2 = _slicedToArray(_useState, 2),
-    value = _useState2[0],
-    setValue = _useState2[1];
-  var ref = useRef(null);
-  var handleMouseenter = function handleMouseenter() {
-    return setValue(true);
-  };
-  var handleMouseleave = function handleMouseleave() {
-    return setValue(false);
-  };
-  useEffect(function () {
-    var node = ref.current;
+const uniqueID = uniqueGetter();
+const useForceUpdateUID = () => {
+  const [uid, update] = useState(uniqueID());
+  const forceUpdate = _ => update(uniqueID());
+  return [forceUpdate, uid];
+};
+const useHover = () => {
+  const [value, setValue] = useState(false);
+  const ref = useRef(null);
+  const handleMouseenter = () => setValue(true);
+  const handleMouseleave = () => setValue(false);
+  useEffect(() => {
+    const node = ref.current;
     if (node) {
       node.addEventListener('mouseenter', handleMouseenter);
       node.addEventListener('mouseleave', handleMouseleave);
-      return function () {
+      return () => {
         node.removeEventListener('mouseenter', handleMouseenter);
         node.removeEventListener('mouseleave', handleMouseleave);
       };
@@ -44,47 +54,25 @@ var useHover = function useHover() {
   }, [ref.current]);
   return [ref, value];
 };
-var useMounted = function useMounted() {
-  var mounted = useRef(false);
-  useEffect(function () {
+const useMounted = () => {
+  const mounted = useRef(false);
+  useEffect(() => {
     mounted.current = true;
-    return function () {
+    return () => {
       mounted.current = false;
     };
   }, []);
-  return function () {
-    return mounted.current;
-  };
+  return () => mounted.current;
 };
-var useForceUpdate = function useForceUpdate() {
-  var _useState3 = useState({}),
-    _useState4 = _slicedToArray(_useState3, 2),
-    update = _useState4[1];
-  var forceUpdate = function forceUpdate(_) {
-    return update({});
-  };
-  return forceUpdate;
-};
-var useAutoUpdate = function useAutoUpdate(ms) {
-  var update = useForceUpdate();
-  useEffect(function () {
-    var interval = setInterval(function () {
-      return update();
-    }, ms);
-    return function () {
-      return clearInterval(interval);
-    };
+const useWinResize = () => {
+  const force = useForceUpdate();
+  useEffect(() => {
+    window.addEventListener('resize', force);
+    return () => window.removeEventListener('resize', force);
   }, []);
-};
-var uniqueID = uniqueGetter();
-var useForceUpdateUID = function useForceUpdateUID() {
-  var _useState5 = useState(uniqueID()),
-    _useState6 = _slicedToArray(_useState5, 2),
-    uid = _useState6[0],
-    update = _useState6[1];
-  var forceUpdate = function forceUpdate(_) {
-    return update(uniqueID());
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight
   };
-  return [forceUpdate, uid];
 };
-export { useAutoUpdate, useClickOutside, useForceUpdate, useForceUpdateUID, useHover, useMounted };
+export { useAutoUpdate, useClickOutside, useForceUpdate, useForceUpdateUID, useHover, useMounted, useWinResize };
