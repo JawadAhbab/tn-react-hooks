@@ -1,13 +1,17 @@
 import { useEffect, useRef } from 'react'
-type OnObserve = (entry: IntersectionObserverEntry) => void
+type Props<E extends HTMLElement> = { entry: IntersectionObserverEntry; elm: E }
+type OnObserve<E extends HTMLElement> = (props: Props<E>) => void
 
-export const useIntersectionObserver = (onObserve: OnObserve) => {
-  const $elm = useRef<HTMLElement>(null)
+export const useIntersectionObserver = <E extends HTMLElement = HTMLElement>(
+  onObserve: OnObserve<E>
+) => {
+  const $elm = useRef<E>(null)
 
   useEffect(() => {
-    if (!$elm.current) return
-    const observer = new IntersectionObserver(([entry]) => onObserve(entry))
-    observer.observe($elm.current)
+    const elm = $elm.current
+    if (!elm) return
+    const observer = new IntersectionObserver(([entry]) => onObserve({ entry, elm }))
+    observer.observe(elm)
     return () => observer.disconnect()
   }, [])
 
