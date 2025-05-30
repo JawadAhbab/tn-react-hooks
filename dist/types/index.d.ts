@@ -3,5 +3,7 @@ export { useClickOutside } from './hooks/useClickOutside';
 export { useForceUpdate } from './hooks/useForceUpdate';
 export { useForceUpdateUID } from './hooks/useForceUpdateUID';
 export { useHover } from './hooks/useHover';
+export { useIntersectionObserver } from './hooks/useIntersectionObserver';
 export { useMounted } from './hooks/useMounted';
+export { useResizeObserver } from './hooks/useResizeObserver';
 export { useWinResize } from './hooks/useWinResize';

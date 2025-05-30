@@ -56,6 +56,25 @@ const useHover = () => {
   }, [ref.current]);
   return [ref, value];
 };
+const useIntersectionObserver = onObserve => {
+  const $elm = react.useRef(null);
+  react.useEffect(() => {
+    const elm = $elm.current;
+    if (!elm) return;
+    const observer = new IntersectionObserver(_ref => {
+      let [entry] = _ref;
+      return onObserve({
+        entry,
+        elm
+      });
+    });
+    observer.observe(elm);
+    return () => observer.disconnect();
+  }, []);
+  return {
+    $elm
+  };
+};
 const useMounted = () => {
   const mounted = react.useRef(false);
   react.useEffect(() => {
@@ -65,6 +84,25 @@ const useMounted = () => {
     };
   }, []);
   return () => mounted.current;
+};
+const useResizeObserver = onObserve => {
+  const $elm = react.useRef(null);
+  react.useEffect(() => {
+    const elm = $elm.current;
+    if (!elm) return;
+    const observer = new ResizeObserver(_ref2 => {
+      let [entry] = _ref2;
+      return onObserve({
+        entry,
+        elm
+      });
+    });
+    observer.observe(elm);
+    return () => observer.disconnect();
+  }, []);
+  return {
+    $elm
+  };
 };
 const useWinResize = () => {
   const force = useForceUpdate();
@@ -82,5 +120,7 @@ exports.useClickOutside = useClickOutside;
 exports.useForceUpdate = useForceUpdate;
 exports.useForceUpdateUID = useForceUpdateUID;
 exports.useHover = useHover;
+exports.useIntersectionObserver = useIntersectionObserver;
 exports.useMounted = useMounted;
+exports.useResizeObserver = useResizeObserver;
 exports.useWinResize = useWinResize;
