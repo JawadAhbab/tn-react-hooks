@@ -2,6 +2,46 @@
 
 var react = require('react');
 var tnUniqid = require('tn-uniqid');
+function useIntersectionObserver() {
+  const observe = arguments.length === 2 ? arguments.length <= 1 ? undefined : arguments[1] : arguments.length <= 0 ? undefined : arguments[0];
+  const $givenelm = arguments.length === 2 ? arguments.length <= 0 ? undefined : arguments[0] : undefined;
+  const $elm = $givenelm ? $givenelm : react.useRef(null);
+  react.useEffect(() => {
+    const elm = $elm.current;
+    if (!elm) return;
+    const observer = new IntersectionObserver(_ref => {
+      let [entry] = _ref;
+      return observe({
+        entry,
+        elm
+      });
+    });
+    observer.observe(elm);
+    return () => observer.disconnect();
+  }, []);
+  return {
+    $elm
+  };
+}
+const useResizeObserver = observe => {
+  const $elm = react.useRef(null);
+  react.useEffect(() => {
+    const elm = $elm.current;
+    if (!elm) return;
+    const observer = new ResizeObserver(_ref2 => {
+      let [entry] = _ref2;
+      return observe({
+        entry,
+        elm
+      });
+    });
+    observer.observe(elm);
+    return () => observer.disconnect();
+  }, []);
+  return {
+    $elm
+  };
+};
 const useForceUpdate = () => {
   const [, update] = react.useState({});
   const forceUpdate = _ => update({});
@@ -56,25 +96,6 @@ const useHover = () => {
   }, [ref.current]);
   return [ref, value];
 };
-const useIntersectionObserver = onObserve => {
-  const $elm = react.useRef(null);
-  react.useEffect(() => {
-    const elm = $elm.current;
-    if (!elm) return;
-    const observer = new IntersectionObserver(_ref => {
-      let [entry] = _ref;
-      return onObserve({
-        entry,
-        elm
-      });
-    });
-    observer.observe(elm);
-    return () => observer.disconnect();
-  }, []);
-  return {
-    $elm
-  };
-};
 const useMounted = () => {
   const mounted = react.useRef(false);
   react.useEffect(() => {
@@ -84,25 +105,6 @@ const useMounted = () => {
     };
   }, []);
   return () => mounted.current;
-};
-const useResizeObserver = onObserve => {
-  const $elm = react.useRef(null);
-  react.useEffect(() => {
-    const elm = $elm.current;
-    if (!elm) return;
-    const observer = new ResizeObserver(_ref2 => {
-      let [entry] = _ref2;
-      return onObserve({
-        entry,
-        elm
-      });
-    });
-    observer.observe(elm);
-    return () => observer.disconnect();
-  }, []);
-  return {
-    $elm
-  };
 };
 const useWinResize = () => {
   const force = useForceUpdate();
