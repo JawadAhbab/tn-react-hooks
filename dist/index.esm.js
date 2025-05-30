@@ -21,8 +21,10 @@ function useIntersectionObserver() {
     $elm
   };
 }
-const useResizeObserver = observe => {
-  const $elm = useRef(null);
+function useResizeObserver() {
+  const observe = arguments.length === 2 ? arguments.length <= 1 ? undefined : arguments[1] : arguments.length <= 0 ? undefined : arguments[0];
+  const $givenelm = arguments.length === 2 ? arguments.length <= 0 ? undefined : arguments[0] : undefined;
+  const $elm = $givenelm ? $givenelm : useRef(null);
   useEffect(() => {
     const elm = $elm.current;
     if (!elm) return;
@@ -39,7 +41,7 @@ const useResizeObserver = observe => {
   return {
     $elm
   };
-};
+}
 const useForceUpdate = () => {
   const [, update] = useState({});
   const forceUpdate = _ => update({});
