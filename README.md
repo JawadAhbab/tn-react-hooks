@@ -1,6 +1,9 @@
 `useAutoUpdate()`
+`useClickOutside()`
 `useForceUpdate()`
 `useForceUpdateUID()`
 `useHover()`
+`useIntersectionObserver()`
 `useMounted()`
-`useClickOutside()`
+`useResizeObserver()`
+`useWinResize()`
